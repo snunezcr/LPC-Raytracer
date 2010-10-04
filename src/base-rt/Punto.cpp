@@ -18,10 +18,10 @@
 Punto::Punto() : x(0), y(0), z(0) {
 }
 
-Punto::Punto(float x, float y, float z) {
-	this->x = x;
-	this->y = y;
-	this->z = z;
+Punto::Punto(float xx, float yy, float zz) {
+	x = xx;
+	y = yy;
+	z = zz;
 }
 
 Punto Punto::operator+(const Vector &v) {

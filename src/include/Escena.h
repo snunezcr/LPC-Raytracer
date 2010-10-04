@@ -17,7 +17,6 @@
 
 #include <vector>
 #include <Configuracion.h>
-#include <Raytracer.h>
 
 /*
  * Una escena esta compuesta de los siguientes elementos

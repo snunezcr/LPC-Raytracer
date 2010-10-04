@@ -31,7 +31,7 @@ class Configuracion {
 private:
 	void *vars;
 	void *secs;
-	const String nombreArchivo;
+	String nombreArchivo;
 	String seccionLocal;
 	bool cargado;
 	String preprocesar(fstream &input);

@@ -42,8 +42,7 @@ Material::~Material() {
 
 }
 
-Esfera::Esfera() {
-	posicion(0.0f, 0.0f, 0.0f);
+Esfera::Esfera() : posicion(0.0f, 0.0f, 0.0f) {
 	tamano = 0.0f;
 	idMaterial = 0;
 }
@@ -58,8 +57,7 @@ Esfera::~Esfera() {
 
 }
 
-Luz::Luz() {
-	posicion(0.0f, 0.0f, 0.0f);
+Luz::Luz() : posicion(0.0f, 0.0f, 0.0f) {
 	rojo = 0;
 	verde = 0;
 	azul = 0;
@@ -76,9 +74,8 @@ Luz::~Luz() {
 
 }
 
-Rayo::Rayo() {
-	inicio(0.0f, 0.0f, 0.0f);
-	direccion(0.0f, 0.0f, 0.0f);
+Rayo::Rayo() : inicio(0.0f, 0.0f, 0.0f), direccion(0.0f, 0.0f, 0.0f) {
+
 }
 
 Rayo::Rayo(Punto &i, Vector &d) {
@@ -90,23 +87,13 @@ Rayo::~Rayo() {
 
 }
 
-Escena::Escena() {
-	listaMateriales = NULL;
-	listaEsferas = NULL;
-	listaLuces = NULL;
+Escena::Escena() : listaMateriales(NULL), listaEsferas(NULL), listaLuces(NULL) {
 	tamX = 0;
 	tamY = 0;
 }
 
 Escena::~Escena() {
-	if (listaMateriales != NULL)
-		delete listaMateriales;
 
-	if (listaEsferas != NULL)
-		delete listaEsferas;
-
-	if (listaLuces != NULL)
-		delete listaLuces;
 }
 
 bool Escena::init(char *archivo) {
@@ -198,7 +185,7 @@ void Escena::obtenerEsfera(const Configuracion &archivo, Esfera &esfera) {
 void Escena::obtenerLuz(const Configuracion &archivo, Luz &luz) {
 	float colorInt;
 
-	luz.posicion = archivo.cargarPorNombreFloat("Posicion", 0.0f);
+	luz.posicion = archivo.obtenerPorNombrePunto("Posicion", origen);
 
 	colorInt = float(archivo.cargarPorNombreFloat("Intensidad", 0.0f));
 	Vector vectorInt(colorInt, colorInt, colorInt);
