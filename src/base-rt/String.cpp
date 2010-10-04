@@ -192,7 +192,7 @@ String & String::pegar(unsigned int ui) {
 
 String & String::pegar(long l) {
 	char buf[40];
-	sprintf("%ld", buf);
+	sprintf(buf, "%ld", l);
 
 	int largo = strlen(buf);
 
@@ -208,7 +208,7 @@ String & String::pegar(long l) {
 
 String & String::pegar(unsigned long ul) {
 	char buf[40];
-	sprintf("%lu", buf);
+	sprintf(buf, "%lu", ul);
 
 	int largo = strlen(buf);
 
