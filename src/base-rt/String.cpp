@@ -222,7 +222,7 @@ String & String::pegar(unsigned long ul) {
 	return *this;
 }
 
-const char * String::cString() const {
+char * String::cString() const {
 	return buffer;
 }
 
@@ -275,6 +275,11 @@ int String::encontrarUltimo(char c) const {
 	return -1;
 }
 
-bool String::operator<(const String &s) {
+bool String::operator<(String &s) {
 	return strcmp(cString(), s.cString()) < 0;
 }
+
+bool String::operator<(String s) {
+	return strcmp(cString(), s.cString()) < 0;
+}
+

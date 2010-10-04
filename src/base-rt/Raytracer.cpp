@@ -20,7 +20,7 @@
 #include <algorithm>
 #include <Raytracer.h>
 
-Raytracer::Raytracer(char *ain, char *aout) {
+Raytracer::Raytracer(const char *ain, const char *aout) {
 	archivoIn = ain;
 	archivoOut = aout;
 }
@@ -37,7 +37,7 @@ bool Raytracer::dibujar() {
 	int i;
 	int j;
 
-	ostream archivoTGA(archivoOut, ios::binary);
+	ofstream archivoTGA(archivoOut, ios_base::binary);
 
 	if (! archivoTGA)
 		return false;
@@ -103,7 +103,7 @@ bool Raytracer::dibujar() {
 				if (esferaActual == -1)
 					break;
 
-				Punto posRayoNormal = rayo.inicio - t * rayo.direccion;
+				Punto posRayoNormal = rayo.inicio - rayo.direccion * t;
 				Vector rayoNormal = posRayoNormal -
 						escena.listaEsferas[k].posicion;
 				float divisorNormal = rayoNormal * rayoNormal;
@@ -112,7 +112,7 @@ bool Raytracer::dibujar() {
 					break;
 
 				divisorNormal = 1.0f/sqrt(divisorNormal);
-				rayoNormal = divisorNormal * rayoNormal;
+				rayoNormal = rayoNormal*divisorNormal;
 
 				Material materialActual =
 					escena.listaMateriales[escena.listaEsferas[k].idMaterial];
@@ -120,7 +120,7 @@ bool Raytracer::dibujar() {
 				/* Se calcula el efecto de la luz sobre un objeto y su color */
 				for (m = 0; m < escena.listaLuces.size(); m++) {
 					Luz luzActual = escena.listaLuces[m];
-					Vector distanciaLuz = luzActual - posRayoNormal;
+					Vector distanciaLuz = luzActual.posicion - posRayoNormal;
 
 					if (rayoNormal * distanciaLuz <= 0.0f)
 						continue;
@@ -132,7 +132,7 @@ bool Raytracer::dibujar() {
 
 					Rayo rayoLuz;
 					rayoLuz.inicio = posRayoNormal;
-					rayoLuz.direccion = (1 / magnitud) * distanciaLuz;
+					rayoLuz.direccion = distanciaLuz*(1 / magnitud);
 
 					/* Se calculan las sombras para cada uno de los objetos */
 					bool enSombra = false;
@@ -149,7 +149,7 @@ bool Raytracer::dibujar() {
 					 * intensidad, direccion del rayo de Luz y material
 					 */
 					if (! enSombra) {
-						float lambert = (rayoLuz.dir * rayoNormal) * c;
+						float lambert = (rayoLuz.direccion * rayoNormal) * c;
 						rojo += lambert * luzActual.rojo * materialActual.rojo;
 						verde += lambert * luzActual.verde * materialActual.verde;
 						azul += lambert * luzActual.azul * materialActual.azul;
@@ -160,16 +160,15 @@ bool Raytracer::dibujar() {
 				 * material (i.e. capacidad de reflejar la luz.
 				 */
 				c *= materialActual.reflexion;
-				float reflejado = 2.0f * (rayo * rayoNormal);
+				float reflejado = 2.0f * (rayo.direccion*rayoNormal);
 				rayo.inicio = posRayoNormal;
-				rayo.direccion = rayo.direccion - reflejado * rayoNormal;
+				rayo.direccion = rayo.direccion - rayoNormal*reflejado;
 			} while (c > 0.0f && level < 10);
 		}
 	}
 }
 
-bool Raytracer::intersecaEsfera(const Rayo &rayo, const Esfera &esfera,
-																	float &t) {
+bool Raytracer::intersecaEsfera(Rayo &rayo, Esfera &esfera, float &t) {
 	Vector distancia = esfera.posicion - rayo.inicio;
 	float b = rayo.direccion * distancia;
 	float d = b*b - distancia*distancia + esfera.tamano*esfera.tamano;

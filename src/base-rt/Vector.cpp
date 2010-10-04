@@ -24,21 +24,21 @@ Vector::Vector(float x, float y, float z) {
 }
 
 Vector Vector::operator+(const Vector &v) {
-	Vector w(this->x + v.x, this->y + v.y, this->z + v.z);
+	Vector w(x + v.x, y + v.y, z + v.z);
 	return w;
 }
 
 Vector Vector::operator-(const Vector &v) {
-	Vector w(this->x - v.x, this->y - v.y, this->z - v.z);
+	Vector w(x - v.x, y - v.y, z - v.z);
 	return w;
 }
 
 Vector Vector::operator*(float c) {
-	Vector v(this->x * c, this->y * c, this->z * c);
+	Vector v(x * c, y * c, z * c);
 	return v;
 }
 
 float Vector::operator*(const Vector &v) {
-	float f  = this->x * v.x + this->y * v.y + this->z * v.z;
+	float f  = x * v.x + y * v.y + z * v.z;
 	return f;
 }

@@ -23,11 +23,11 @@
 class Raytracer {
 private:
 	Escena escena;
-	char *archivoIn;
-	char *archivoOut;
-	bool intersecaEsfera(const Rayo &rayo, const Esfera &esfera, float &t);
+	const char *archivoIn;
+	const char *archivoOut;
+	bool intersecaEsfera(Rayo &rayo, Esfera &esfera, float &t);
 public:
-	Raytracer(char *ain, char *aout);
+	Raytracer(const char *ain, const char *aout);
 	~Raytracer();
 	bool init();
 	bool dibujar();

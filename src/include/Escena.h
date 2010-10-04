@@ -82,7 +82,7 @@ public:
 	int tamY;
 	Escena();
 	~Escena();
-	bool init(char *archivo);
+	bool init(const char *archivo);
 private:
 	void obtenerMaterial(const Configuracion &archivo, Material &material);
 	void obtenerEsfera(const Configuracion &archivo, Esfera &esfera);

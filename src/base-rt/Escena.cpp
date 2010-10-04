@@ -87,7 +87,7 @@ Rayo::~Rayo() {
 
 }
 
-Escena::Escena() : listaMateriales(NULL), listaEsferas(NULL), listaLuces(NULL) {
+Escena::Escena() : listaMateriales(), listaEsferas(), listaLuces() {
 	tamX = 0;
 	tamY = 0;
 }
@@ -96,7 +96,7 @@ Escena::~Escena() {
 
 }
 
-bool Escena::init(char *archivo) {
+bool Escena::init(const char *archivo) {
 	int numMateriales;
 	int numEsferas;
 	int numLuces;

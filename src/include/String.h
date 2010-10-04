@@ -47,7 +47,7 @@ public:
 	String & pegar(unsigned int ui);
 	String & pegar(long l);
 	String & pegar(unsigned long ul);
-	const char * cString() const;
+	char * cString() const;
 	int tamanoStr() const;
 	bool vacia() const;
 	int comparar(const String &s) const;
@@ -57,7 +57,8 @@ public:
 	iterador final();
 	String substring(int pos, int n) const;
 	int encontrarUltimo(char c) const;
-	bool operator<(const String &s);
+	bool operator<(String &s);
+	bool operator<(String s);
 };
 
 #endif /* __STRING_H_ */

@@ -27,7 +27,7 @@ public:
 	Punto(float x, float y, float z);
 	Punto operator+(const Vector &v);
 	Punto operator-(const Vector &v);
-	Vector operator-(const Punto &p);
+	Vector operator-(Punto &p);
 };
 
 #endif /* PUNTO_H_ */

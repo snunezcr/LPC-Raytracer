@@ -25,19 +25,19 @@ Punto::Punto(float xx, float yy, float zz) {
 }
 
 Punto Punto::operator+(const Vector &v) {
-	Punto p(this->x + v.x, this->y + v.y, this->z + v.z);
+	Punto p(x + v.x, y + v.y, z + v.z);
 
 	return p;
 }
 
 Punto Punto::operator-(const Vector &v) {
-	Punto p(this->x - v.x, this->y - v.y, this->z - v.z);
+	Punto p(x - v.x, y - v.y, z - v.z);
 
 	return p;
 }
 
-Vector Punto::operator-(const Punto &p) {
-	Vector v(this->x - p.x, this->y - p.y, this->z - p.z);
+Vector Punto::operator-(Punto &p) {
+	Vector v(x - p.x, y - p.y, z - p.z);
 
 	return v;
 }
