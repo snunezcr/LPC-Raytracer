@@ -57,8 +57,7 @@ public:
 	iterador final();
 	String substring(int pos, int n) const;
 	int encontrarUltimo(char c) const;
-	bool operator<(String &s);
-	bool operator<(String s);
+	bool operator<(const String &s) const;
 };
 
 #endif /* __STRING_H_ */

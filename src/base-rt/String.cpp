@@ -275,11 +275,7 @@ int String::encontrarUltimo(char c) const {
 	return -1;
 }
 
-bool String::operator<(String &s) {
-	return strcmp(cString(), s.cString()) < 0;
-}
-
-bool String::operator<(String s) {
+bool String::operator<(const String &s) const {
 	return strcmp(cString(), s.cString()) < 0;
 }
 

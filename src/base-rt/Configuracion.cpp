@@ -13,10 +13,12 @@
  */
 
 #include <cmath>
+#include <stdlib.h>
 #include <Configuracion.h>
 
 Configuracion::Configuracion(const String &archivo) : vars(NULL), secs(NULL),
 										nombreArchivo(archivo), cargado(false) {
+
 }
 
 Configuracion::~Configuracion() {
