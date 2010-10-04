@@ -71,6 +71,10 @@ String & String::operator=(const String &s) {
 	return asignar(s);
 }
 
+String & String::operator=(const char *s) {
+	return asignar(s);
+}
+
 String & String::asignar(const String &s) {
 	int largo = s.tamanoStr();
 

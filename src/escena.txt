@@ -1,0 +1,68 @@
+Escena
+{
+  Imagen.Ancho = 800;
+  Imagen.Altura = 600;  
+  CantidadMateriales = 3;
+  CantidadEsferas = 3;
+  CantidadLuces = 2;
+}
+
+Material0
+{
+  Difusividad = 1.0, 1.0, 0.0;
+  Reflexividad = 0.5;
+}
+
+ 
+
+Material1
+{
+  Difusividad = 0.0, 1.0, 1.0;
+  Reflexividad = 0.5;
+}
+
+Material2
+{
+  Difusividad = 1.0, 0.0, 1.0;
+  Reflexividad = 0.5;
+}
+
+Esfera0
+{
+  Centro = 233.0, 290.0, 0.0; 
+  Tamano = 100.0;
+  Material.id = 0;
+}
+
+ 
+
+Esfera1
+{
+  Centro = 407.0, 290.0, 0.0;
+  Tamano = 100.0;
+  Material.id = 1;
+}
+
+ 
+
+Esfera2
+{
+  Centro = 320.0, 140.0, 0.0;  
+  Tamano = 100.0;
+  Material.id = 2;
+
+}
+
+Luz0
+{
+  Posicion = 0.0, 240.0, -100.0;  
+  Intensidad = 1.0, 1.0, 1.0 ;
+}
+
+Luz1
+{
+
+  Posicion = 640.0, 240.0, -10000.0;
+  Intensidad = 0.6, 0.7, 1.0;
+}
+

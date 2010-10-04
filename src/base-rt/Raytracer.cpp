@@ -74,8 +74,6 @@ bool Raytracer::dibujar() {
 	/* Fin del encabezado TGA */
 	archivoTGA.put(0);
 
-	cout << "Encabezado TGA escrito..." << endl;
-
 	/* Para cada pixel en la escena */
 	for (j = 0; j < escena.tamY; j++) {
 		for (i = 0; i < escena.tamX; i++) {
@@ -83,7 +81,7 @@ bool Raytracer::dibujar() {
 			float verde =0.0f;
 			float azul = 0.0f;
 			float c = 1.0f;
-			int level;
+			int level = 0;
 
 			/* Se coloca el rayo a una distancia promedio para evitar problemas
 			 * de redondeo. Una forma de mejorarlo es

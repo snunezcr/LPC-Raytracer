@@ -29,11 +29,12 @@ private:
 public:
 	String();
 	String(const String &s);
-	String(const char * s);
+	String(const char *s);
 	String(const char *s, int largo);
 	String(iterador_const inicial, iterador_const final);
 	~String();
 	String & operator=(const String &s);
+	String & operator=(const char *s);
 	String & asignar(const String &s);
 	String & asignar(const char * s);
 	String & asignar(const char * s, int largo);

@@ -86,7 +86,7 @@ Rayo::~Rayo() {
 
 }
 
-Escena::Escena() : listaMateriales(), listaEsferas(), listaLuces() {
+Escena::Escena() {
 	tamX = 0;
 	tamY = 0;
 }
@@ -114,6 +114,10 @@ bool Escena::init(const char *archivo) {
 	numMateriales = archivoEscena.cargarPorNombreInt("CantidadMateriales", 0);
 	numEsferas = archivoEscena.cargarPorNombreInt("CantidadEsferas", 0);
 	numLuces = archivoEscena.cargarPorNombreInt("CantidadLuces", 0);
+
+	listaMateriales.resize(numMateriales);
+	listaEsferas.resize(numEsferas);
+	listaLuces.resize(numLuces);
 
 	for (i = 0; i < numMateriales; i++) {
 		Material &actual = listaMateriales[i];
@@ -156,7 +160,7 @@ bool Escena::init(const char *archivo) {
 
 		obtenerLuz(archivoEscena, actual);
 	}
-
+	
 	return true;
 }
 

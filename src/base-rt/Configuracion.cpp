@@ -35,17 +35,17 @@ String Configuracion::preprocesar(fstream &input) {
 
 	while (getline(input, linea, '\n')) {
 		linea = linea.substr(0, linea.find("//"));
-	}
 
-	for (string::iterator i = linea.begin(); i != linea.end(); i++) {
-		switch (*i) {
-		case ' ':
-		case '\t':
-		case '\n':
-		case '\r':
-			break;
-		default:
-			tmp.pegar(*i);
+		for (string::iterator i = linea.begin(); i != linea.end(); i++) {
+			switch (*i) {
+			case ' ':
+			case '\t':
+			case '\n':
+			case '\r':
+				break;
+			default:
+				tmp.pegar(*i);
+			}
 		}
 	}
 
@@ -128,43 +128,46 @@ nombre_variable:
 		i++;
 		goto valor_variable;
 	default:
-		valorTemp.pegar(&*i, 1);
+		nombreTemp.pegar(&*i, 1);
 		break;
 	}
 	i++;
 	goto nombre_variable;
 valor_variable:
-		if (i == tmp.final()) {
+	if (i == tmp.final()) {
+		(static_cast<ConjuntoStrings *>(secs))->clear();
+		(static_cast<ConjuntoVariables *>(vars))->clear();
+		return false;
+	}
+	switch(*i) {
+	case '{':
+		(static_cast<ConjuntoStrings *>(secs))->clear();
+		(static_cast<ConjuntoVariables *>(vars))->clear();
+		return false;
+	case '}':
+		(static_cast<ConjuntoStrings *>(secs))->clear();
+		(static_cast<ConjuntoVariables *>(vars))->clear();
+		return false;
+	case ';':
+		if (nombreTemp.vacia()) {
 			(static_cast<ConjuntoStrings *>(secs))->clear();
 			(static_cast<ConjuntoVariables *>(vars))->clear();
 			return false;
 		}
-		switch(*i) {
-		case '{':
-			goto en_seccion;
-		case '}':
-			(static_cast<ConjuntoStrings *>(secs))->clear();
-			(static_cast<ConjuntoVariables *>(vars))->clear();
-			return false;
-		case '=':
-			if (nombreTemp.vacia()) {
-				(static_cast<ConjuntoStrings *>(secs))->clear();
-				(static_cast<ConjuntoVariables *>(vars))->clear();
-				return false;
-			}
-			buffer.asignar(seccionActual);
-			buffer.pegar('/');
-			(static_cast<ConjuntoVariables *>(vars))->insert(ConjuntoVariables::value_type(buffer, valorTemp));
-			nombreTemp.redimensionar(0);
-			valorTemp.redimensionar(0);
-			i++;
-			goto en_seccion;
-		default:
-			valorTemp.pegar(i, 1);
-			break;
-		}
+		buffer.asignar(seccionActual);
+		buffer.pegar('/');
+		buffer.pegar(nombreTemp);
+		(static_cast<ConjuntoVariables *>(vars))->insert(ConjuntoVariables::value_type(buffer, valorTemp));
+		nombreTemp.redimensionar(0);
+		valorTemp.redimensionar(0);
 		i++;
-		goto valor_variable;
+		goto en_seccion;
+	default:
+		valorTemp.pegar(i, 1);
+		break;
+	}
+	i++;
+	goto valor_variable;
 fin:
 	return true;
 }
@@ -287,6 +290,7 @@ int Configuracion::establecerSeccion(const String &s) {
 		return 0;
 	} else {
 		seccionLocal.redimensionar(0);
-		return 1;
+		return -1;
 	}
 }
+
