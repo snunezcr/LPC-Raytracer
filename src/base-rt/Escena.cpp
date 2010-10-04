@@ -22,7 +22,6 @@ using namespace std;
 const Vector vectorNulo(0.0f, 0.0f, 0.0f);
 const Punto origen(0.0f, 0.0f, 0.0f);
 const String cadenaVacia("");
-const String cadenaIntensidad("Intensidad");
 
 Material::Material() {
 	reflexion = 0;

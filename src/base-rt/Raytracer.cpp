@@ -74,6 +74,8 @@ bool Raytracer::dibujar() {
 	/* Fin del encabezado TGA */
 	archivoTGA.put(0);
 
+	cout << "Encabezado TGA escrito..." << endl;
+
 	/* Para cada pixel en la escena */
 	for (j = 0; j < escena.tamY; j++) {
 		for (i = 0; i < escena.tamX; i++) {
@@ -164,8 +166,13 @@ bool Raytracer::dibujar() {
 				rayo.inicio = posRayoNormal;
 				rayo.direccion = rayo.direccion - rayoNormal*reflejado;
 			} while (c > 0.0f && level < 10);
+			
+			archivoTGA.put((unsigned char) min(azul*255.0f, 255.0f));
+			archivoTGA.put((unsigned char) min(verde*255.0f, 255.0f));
+			archivoTGA.put((unsigned char) min(rojo*255.0f, 255.0f));
 		}
 	}
+	return true;
 }
 
 bool Raytracer::intersecaEsfera(Rayo &rayo, Esfera &esfera, float &t) {
