@@ -18,27 +18,27 @@ Vector::Vector() : x(0), y(0), z(0) {
 }
 
 Vector::Vector(float x, float y, float z) {
-	this->x = x;
-	this->y = y;
-	this->z = z;
+	x = x;
+	y = y;
+	z = z;
 }
 
-Vector Vector::operator+(const Vector &v) {
+Vector Vector::operator+(const Vector &v) const {
 	Vector w(x + v.x, y + v.y, z + v.z);
 	return w;
 }
 
-Vector Vector::operator-(const Vector &v) {
+Vector Vector::operator-(const Vector &v) const {
 	Vector w(x - v.x, y - v.y, z - v.z);
 	return w;
 }
 
-Vector Vector::operator*(float c) {
+Vector Vector::operator*(float c) const {
 	Vector v(x * c, y * c, z * c);
 	return v;
 }
 
-float Vector::operator*(const Vector &v) {
-	float f  = x * v.x + y * v.y + z * v.z;
+float Vector::operator*(const Vector &v) const {
+	float f = x * v.x + y * v.y + z * v.z;
 	return f;
 }

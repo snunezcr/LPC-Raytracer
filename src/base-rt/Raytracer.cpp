@@ -96,12 +96,17 @@ bool Raytracer::dibujar() {
 				float t = 2000.0f;
 				int esferaActual = -1;
 
-				for (k = 0; k < escena.listaEsferas.size(); k++)
-					if (intersecaEsfera(rayo, escena.listaEsferas[k], t))
+				for (k = 0; k < escena.listaEsferas.size(); k++) {
+					if (intersecaEsfera(rayo, escena.listaEsferas[k], t)) {
+						cout << "k = " << k << endl;
 						esferaActual = k;
+					}
+				}
 
 				if (esferaActual == -1)
 					break;
+
+				cout << "Esfera encontrada: " << k << "de " << escena.listaEsferas.size() << endl;
 
 				Punto posRayoNormal = rayo.inicio - rayo.direccion * t;
 				Vector rayoNormal = posRayoNormal -
@@ -173,7 +178,7 @@ bool Raytracer::dibujar() {
 	return true;
 }
 
-bool Raytracer::intersecaEsfera(Rayo &rayo, Esfera &esfera, float &t) {
+bool Raytracer::intersecaEsfera(const Rayo &rayo, const Esfera &esfera, float &t) {
 	Vector distancia = esfera.posicion - rayo.inicio;
 	float b = rayo.direccion * distancia;
 	float d = b*b - distancia*distancia + esfera.tamano*esfera.tamano;

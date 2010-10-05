@@ -23,10 +23,10 @@ public:
 
 	Vector();
 	Vector(float x, float y, float z);
-	Vector operator+(const Vector &v);
-	Vector operator-(const Vector &v);
-	Vector operator*(float c);
-	float operator*(const Vector &v);
+	Vector operator+(const Vector &v) const;
+	Vector operator-(const Vector &v) const;
+	Vector operator*(float c) const;
+	float operator*(const Vector &v) const;
 };
 
 #endif /* VECTOR_H_ */

@@ -25,7 +25,7 @@ private:
 	Escena escena;
 	const char *archivoIn;
 	const char *archivoOut;
-	bool intersecaEsfera(Rayo &rayo, Esfera &esfera, float &t);
+	bool intersecaEsfera(const Rayo &rayo, const Esfera &esfera, float &t);
 public:
 	Raytracer(const char *ain, const char *aout);
 	~Raytracer();
