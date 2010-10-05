@@ -30,13 +30,13 @@
 
 class Material {
 public:
+	Color difusividad;
+	Color especularidad;
 	float reflexion;
-	float rojo;
-	float verde;
-	float azul;
+	float potencia;
 
 	Material();
-	Material(float rf, float rj, float vd, float az);
+	Material(float rf, float pt, Color &dif, Color &esp);
 	~Material();
 	Material operator=(const Material &mat);
 };
@@ -56,12 +56,10 @@ public:
 class Luz {
 public:
 	Punto posicion;
-	float rojo;
-	float verde;
-	float azul;
+	Color intensidad;
 
 	Luz();
-	Luz(Punto &p, float rj, float vd, float az);
+	Luz(Punto &p, Color &it);
 	~Luz();
 	Luz operator=(const Luz &lz);
 };

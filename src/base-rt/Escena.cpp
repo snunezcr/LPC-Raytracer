@@ -13,6 +13,7 @@
  */
 
 #include <iostream>
+#include <Color.h>
 #include <Escena.h>
 #include <Configuracion.h>
 #include <Raytracer.h>
@@ -23,18 +24,17 @@ const Vector vectorNulo(0.0f, 0.0f, 0.0f);
 const Punto origen(0.0f, 0.0f, 0.0f);
 const String cadenaVacia("");
 
-Material::Material() {
+Material::Material() : difusividad(0.0f, 0.0f, 0.0f), 
+					especularidad(0.0f, 0.0f, 0.0f) {
 	reflexion = 0;
-	rojo = 0;
-	verde = 0;
-	azul = 0;
+	potencia = 0;
 }
 
-Material::Material(float rf, float rj, float vd, float az) {
+Material::Material(float rf, float pt, Color &dif, Color &esp) {
 	reflexion = rf;
-	rojo = rj;
-	verde = vd;
-	azul = az;
+	potencia = pt;
+	difusividad = dif;
+	especularidad = esp;
 }
 
 Material::~Material() {
@@ -43,9 +43,9 @@ Material::~Material() {
 
 Material Material::operator=(const Material &mat) {
 	reflexion = mat.reflexion;
-	rojo = mat.rojo;
-	verde = mat.verde;
-	azul = mat.azul;
+	potencia = mat.potencia;
+	difusividad = mat.difusividad;
+	especularidad = mat.especularidad;
 }
 
 Esfera::Esfera() : posicion(0.0f, 0.0f, 0.0f) {
@@ -69,17 +69,13 @@ Esfera Esfera::operator=(const Esfera &es) {
 	idMaterial = es.idMaterial;
 }
 
-Luz::Luz() : posicion(0.0f, 0.0f, 0.0f) {
-	rojo = 0;
-	verde = 0;
-	azul = 0;
+Luz::Luz() : posicion(0.0f, 0.0f, 0.0f), intensidad(0.0f, 0.0f, 0.0f) {
+	
 }
 
-Luz::Luz(Punto &p, float rj, float vd, float az) {
+Luz::Luz(Punto &p, Color &it) {
 	posicion = p;
-	rojo = rj;
-	verde = vd;
-	azul = az;
+	intensidad = it;
 }
 
 Luz::~Luz() {
@@ -88,9 +84,7 @@ Luz::~Luz() {
 
 Luz Luz::operator=(const Luz &lz) {
 	posicion = lz.posicion;
-	rojo = lz.rojo;
-	verde = lz.verde;
-	azul = lz.azul;
+	intensidad = lz.intensidad;
 }
 
 Rayo::Rayo() : inicio(0.0f, 0.0f, 0.0f), direccion(0.0f, 0.0f, 0.0f) {
@@ -192,16 +186,28 @@ bool Escena::init(const char *archivo) {
 void Escena::obtenerMaterial(const Configuracion &archivo, Material &material) {
 	float colorDif;
 	float colorRef;
+	float colorEsp;
+	float colorPot;
 
 	colorDif = float(archivo.cargarPorNombreFloat("Difusividad", 0.0f));
-	Vector vecColor(colorDif, colorDif, colorDif);
-	vecColor = archivo.obtenerPorNombreVector("Difusividad", vecColor);
-	material.rojo = vecColor.x;
-	material.verde = vecColor.y;
-	material.azul = vecColor.z;
+	Vector vecDif(colorDif, colorDif, colorDif);
+	vecDif = archivo.obtenerPorNombreVector("Difusividad", vecDif);
+	material.difusividad.rojo = vecDif.x;
+	material.difusividad.verde = vecDif.y;
+	material.difusividad.azul = vecDif.z;
+
+	colorEsp = float(archivo.cargarPorNombreFloat("Especularidad", 0.0f));
+        Vector vecEsp(colorDif, colorDif, colorDif);
+        vecEsp = archivo.obtenerPorNombreVector("Especularidad", vecEsp);
+        material.especularidad.rojo = vecEsp.x;
+        material.especularidad.verde = vecEsp.y;
+        material.especularidad.azul = vecEsp.z;
 
 	colorRef = float(archivo.cargarPorNombreFloat("Reflexividad", 0.0f));
 	material.reflexion = colorRef;
+
+	colorPot = float(archivo.cargarPorNombreFloat("Potencia", 0.0f));
+        material.potencia = colorPot;
 }
 
 void Escena::obtenerEsfera(const Configuracion &archivo, Esfera &esfera) {
@@ -218,7 +224,8 @@ void Escena::obtenerLuz(const Configuracion &archivo, Luz &luz) {
 	colorInt = float(archivo.cargarPorNombreFloat("Intensidad", 0.0f));
 	Vector vectorInt(colorInt, colorInt, colorInt);
 	vectorInt = archivo.obtenerPorNombreVector("Intensidad", vectorInt);
-	luz.rojo = vectorInt.x;
-	luz.verde = vectorInt.y;
-	luz.azul = vectorInt.z;
+	luz.intensidad.rojo = vectorInt.x;
+	luz.intensidad.verde = vectorInt.y;
+	luz.intensidad.azul = vectorInt.z;
 }
+

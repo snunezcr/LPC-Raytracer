@@ -28,6 +28,7 @@ public:
 	float verde;
 	float azul;
 
+	Color();
 	Color(float r, float v, float a);
 	Color operator+=(const Color &c);
 //	float &obtenerCanal(OFFSET off);

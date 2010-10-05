@@ -77,99 +77,19 @@ bool Raytracer::dibujar() {
 	/* Para cada pixel en la escena */
 	for (j = 0; j < escena.tamY; j++) {
 		for (i = 0; i < escena.tamX; i++) {
-			float rojo = 0.0f;
-			float verde = 0.0f;
-			float azul = 0.0f;
-			float c = 1.0f;
-			int nivel = 0;
-
 			/* Se coloca el rayo a una distancia promedio para evitar problemas
-			 * de redondeo. Una forma de mejorarlo es
+			 * de redondeo. Una forma de mejorarlo es incrementar la cantidad de
+			 * iteraciones.
 			 */
 			Punto origen(float(i), float(j), -1000.0f);
 			Vector u(0.0f, 0.0f, 1.0f);
 			Rayo rayo(origen, u);
-
-			do {
-				unsigned int k;
-				int m;
-				float t = 2000.0f;
-				int esferaActual = -1;
-
-				for (k = 0; k < escena.listaEsferas.size(); k++) {
-					if (intersecaEsfera(rayo, escena.listaEsferas[k], t)) {
-						esferaActual = k;
-					}
-				}
-
-				if (esferaActual == -1)
-					break;
-
-				Punto nInicio = rayo.inicio + (rayo.direccion * t);
-				Vector normal = nInicio -
-						escena.listaEsferas[esferaActual].posicion;
-				float divisorNormal = normal * normal;
-
-				if (divisorNormal == 0.0f)
-					break;
-
-				divisorNormal = 1.0f/sqrt(divisorNormal);
-				normal = normal*divisorNormal;
-				
-				Material materialActual =
-					escena.listaMateriales[escena.listaEsferas[esferaActual].idMaterial];
-				/* Se calcula el efecto de la luz sobre un objeto y su color */
-				for (m = 0; m < escena.listaLuces.size(); m++) {
-					Luz luzActual = escena.listaLuces[m];
-					Vector distanciaLuz = luzActual.posicion - nInicio;
-
-					if (normal * distanciaLuz <= 0.0f)
-						continue;
-
-					float magnitud = sqrt(distanciaLuz * distanciaLuz);
-
-					if (magnitud <= 0.0f)
-						continue;
-
-					Rayo rayoLuz;
-					rayoLuz.inicio = nInicio;
-					rayoLuz.direccion = distanciaLuz*(1 / magnitud);
-
-					/* Se calculan las sombras para cada uno de los objetos */
-					bool enSombra = false;
-
-					for (k = 0; k < escena.listaEsferas.size(); k++) {
-						if (intersecaEsfera(rayoLuz, escena.listaEsferas[k], magnitud)) {
-							enSombra = true;
-							break;
-						}
-					}
-
-					/* Se calcula la relacion de Lambert que correlaciona
-					 * intensidad, direccion del rayo de Luz y material
-					 */
-					if (! enSombra) {
-						float lambert = (rayoLuz.direccion * normal) * c;
-						rojo += lambert * luzActual.rojo * materialActual.rojo;
-						verde += lambert * luzActual.verde * materialActual.verde;
-						azul += lambert * luzActual.azul * materialActual.azul;
-					}
-				}
-
-				/* Se itera para cada una de las intensidades de reflexion del
-				 * material (i.e. capacidad de reflejar la luz).
-				 */
-				c *= materialActual.reflexion;
-				float reflejado = 2.0f * (rayo.direccion*normal);
-				rayo.inicio = nInicio;
-				rayo.direccion = rayo.direccion - normal*reflejado;
-				
-				nivel++;
-			} while (c > 0.0f && nivel < 2);
+			Color pixel = agregarRayo(rayo); 
 			
-			archivoTGA.put((unsigned char) min(azul*255.0f, 255.0f));
-			archivoTGA.put((unsigned char) min(verde*255.0f, 255.0f));
-			archivoTGA.put((unsigned char) min(rojo*255.0f, 255.0f));
+			
+			archivoTGA.put((unsigned char) min(pixel.azul*255.0f, 255.0f));
+			archivoTGA.put((unsigned char) min(pixel.verde*255.0f, 255.0f));
+			archivoTGA.put((unsigned char) min(pixel.rojo*255.0f, 255.0f));
 		}
 	}
 	return true;
@@ -197,6 +117,98 @@ bool Raytracer::intersecaEsfera(const Rayo &rayo, const Esfera &esfera, float &t
 		t = lim_izq;
 		resultado = true;
 	}
+
+	return resultado;
+}
+
+Color Raytracer::agregarRayo(Rayo &rayo) {
+	Color resultado(0.0f, 0.0f, 0.0f);
+	float c = 1.0f;
+	int nivel = 0;
+	/* Se coloca el rayo a una distancia promedio para evitar problemas
+	 * de redondeo. Una forma de mejorarlo es
+	 */
+
+	do {
+		unsigned int k;
+		int m;
+		float t = 2000.0f;
+		int esferaActual = -1;
+
+		for (k = 0; k < escena.listaEsferas.size(); k++) {
+			if (intersecaEsfera(rayo, escena.listaEsferas[k], t)) {
+				esferaActual = k;
+			}
+		}
+
+		if (esferaActual == -1)
+			break;
+
+		Punto nInicio = rayo.inicio + (rayo.direccion * t);
+		Vector normal = nInicio -
+				escena.listaEsferas[esferaActual].posicion;
+		float divisorNormal = normal * normal;
+
+		if (divisorNormal == 0.0f)
+			break;
+
+		divisorNormal = 1.0f/sqrt(divisorNormal);
+		normal = normal*divisorNormal;
+
+		Material materialActual =
+			escena.listaMateriales[escena.listaEsferas[esferaActual].idMaterial];
+		/* Se calcula el efecto de la luz sobre un objeto y su color */
+		for (m = 0; m < escena.listaLuces.size(); m++) {
+			Luz luzActual = escena.listaLuces[m];
+			Vector distanciaLuz = luzActual.posicion - nInicio;
+
+			if (normal * distanciaLuz <= 0.0f)
+				continue;
+
+			float magnitud = sqrt(distanciaLuz * distanciaLuz);
+
+			if (magnitud <= 0.0f)
+				continue;
+
+			Rayo rayoLuz;
+			rayoLuz.inicio = nInicio;
+			rayoLuz.direccion = distanciaLuz*(1 / magnitud);
+
+			/* Se calculan las sombras para cada uno de los objetos */
+			bool enSombra = false;
+
+			for (k = 0; k < escena.listaEsferas.size(); k++) {
+				if (intersecaEsfera(rayoLuz, escena.listaEsferas[k], magnitud)) {
+					enSombra = true;
+					break;
+				}
+			}
+
+			/* Se calcula la relacion de Lambert que correlaciona
+			 * intensidad, direccion del rayo de Luz y material
+			 */
+			if (! enSombra) {
+				float lambert = (rayoLuz.direccion * normal) * c;
+				resultado.rojo += lambert * luzActual.intensidad.rojo *
+						materialActual.difusividad.rojo;
+				resultado.verde += lambert * luzActual.intensidad.verde *
+						materialActual.difusividad.verde;
+				resultado.azul += lambert * luzActual.intensidad.azul *
+						materialActual.difusividad.azul;
+			}
+		}
+
+		/* Se itera para cada una de las intensidades de reflexion del
+		 * material (i.e. capacidad de reflejar la luz).
+		 */
+		c *= materialActual.reflexion;
+		float reflejado = 2.0f * (rayo.direccion*normal);
+		rayo.inicio = nInicio;
+		rayo.direccion = rayo.direccion - normal*reflejado;
+
+		nivel++;
+	} while (c > 0.0f && nivel < 10);
+
 
 	return resultado;
 }

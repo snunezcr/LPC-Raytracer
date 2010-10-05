@@ -14,16 +14,22 @@
 
 #include <Color.h>
 
+Color::Color() {
+        rojo = 0;
+        verde = 0;
+        azul = 0;
+}
+
 Color::Color(float r, float v, float a) {
-	this->rojo = r;
-	this->verde = v;
-	this->azul = a;
+	rojo = r;
+	verde = v;
+	azul = a;
 }
 
 Color Color::operator+=(const Color &c) {
-	this->rojo += c.rojo;
-	this->verde += c.verde;
-	this->azul += c.azul;
+	rojo += c.rojo;
+	verde += c.verde;
+	azul += c.azul;
 
 	return *this;
 }

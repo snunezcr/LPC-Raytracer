@@ -26,6 +26,7 @@ private:
 	const char *archivoIn;
 	const char *archivoOut;
 	bool intersecaEsfera(const Rayo &rayo, const Esfera &esfera, float &t);
+	Color agregarRayo(Rayo &rayo);
 public:
 	Raytracer(const char *ain, const char *aout);
 	~Raytracer();
