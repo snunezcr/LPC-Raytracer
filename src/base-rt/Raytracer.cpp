@@ -141,7 +141,6 @@ bool Raytracer::dibujar() {
 					for (k = 0; k < escena.listaEsferas.size(); k++) {
 						if (intersecaEsfera(rayoLuz, escena.listaEsferas[k], magnitud)) {
 							enSombra = true;
-							cout << "En sombra " << i << " " << j <<  endl;
 							break;
 						}
 					}
