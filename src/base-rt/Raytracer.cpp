@@ -91,14 +91,13 @@ bool Raytracer::dibujar() {
 			Rayo rayo(origen, normal);
 
 			do {
-				int k;
+				unsigned int k;
 				int m;
 				float t = 2000.0f;
 				int esferaActual = -1;
 
 				for (k = 0; k < escena.listaEsferas.size(); k++) {
 					if (intersecaEsfera(rayo, escena.listaEsferas[k], t)) {
-						cout << "k = " << k << endl;
 						esferaActual = k;
 					}
 				}
@@ -106,22 +105,19 @@ bool Raytracer::dibujar() {
 				if (esferaActual == -1)
 					break;
 
-				cout << "Esfera encontrada: " << k << "de " << escena.listaEsferas.size() << endl;
-
 				Punto posRayoNormal = rayo.inicio - rayo.direccion * t;
 				Vector rayoNormal = posRayoNormal -
 						escena.listaEsferas[k].posicion;
 				float divisorNormal = rayoNormal * rayoNormal;
-
+				
 				if (divisorNormal == 0.0f)
 					break;
 
 				divisorNormal = 1.0f/sqrt(divisorNormal);
 				rayoNormal = rayoNormal*divisorNormal;
-
+				
 				Material materialActual =
-					escena.listaMateriales[escena.listaEsferas[k].idMaterial];
-
+					escena.listaMateriales[escena.listaEsferas[esferaActual].idMaterial];
 				/* Se calcula el efecto de la luz sobre un objeto y su color */
 				for (m = 0; m < escena.listaLuces.size(); m++) {
 					Luz luzActual = escena.listaLuces[m];
@@ -143,8 +139,7 @@ bool Raytracer::dibujar() {
 					bool enSombra = false;
 
 					for (k = 0; k < escena.listaEsferas.size(); k++) {
-						if (intersecaEsfera(rayoLuz, escena.listaEsferas[k],
-																	magnitud)) {
+						if (intersecaEsfera(rayoLuz, escena.listaEsferas[k], magnitud)) {
 							enSombra = true;
 							break;
 						}
