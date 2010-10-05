@@ -105,11 +105,11 @@ bool Raytracer::dibujar() {
 				if (esferaActual == -1)
 					break;
 
-				Punto nInicio = rayo.inicio - rayo.direccion * t;
+				Punto nInicio = rayo.inicio + (rayo.direccion * t);
 				Vector normal = nInicio -
 						escena.listaEsferas[esferaActual].posicion;
 				float divisorNormal = normal * normal;
-				
+
 				if (divisorNormal == 0.0f)
 					break;
 
@@ -121,7 +121,6 @@ bool Raytracer::dibujar() {
 				/* Se calcula el efecto de la luz sobre un objeto y su color */
 				for (m = 0; m < escena.listaLuces.size(); m++) {
 					Luz luzActual = escena.listaLuces[m];
-
 					Vector distanciaLuz = luzActual.posicion - nInicio;
 
 					if (normal * distanciaLuz <= 0.0f)
@@ -167,7 +166,7 @@ bool Raytracer::dibujar() {
 				rayo.direccion = rayo.direccion - normal*reflejado;
 				
 				nivel++;
-			} while (c > 0.0f && nivel < 10);
+			} while (c > 0.0f && nivel < 2);
 			
 			archivoTGA.put((unsigned char) min(azul*255.0f, 255.0f));
 			archivoTGA.put((unsigned char) min(verde*255.0f, 255.0f));

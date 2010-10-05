@@ -2,32 +2,26 @@ Escena
 {
   Imagen.Ancho = 800;
   Imagen.Altura = 600;  
-  CantidadMateriales = 4;
-  CantidadEsferas = 4;
+  CantidadMateriales = 3;
+  CantidadEsferas = 3;
   CantidadLuces = 2;
 }
 
 Material0
 {
-  Difusividad = 1.0, 1.0, 0.0;
+  Difusividad = 1.0, 0.0, 0.0;
   Reflexividad = 0.5;
 }
 
 Material1
 {
-  Difusividad = 0.0, 1.0, 1.0;
+  Difusividad = 0.0, 1.0, 0.0;
   Reflexividad = 0.5;
 }
 
 Material2
 {
-  Difusividad = 1.0, 0.0, 1.0;
-  Reflexividad = 0.5;
-}
-
-Material3
-{
-  Difusividad = 0.1, 0.9, 0.1;
+  Difusividad = 0.0, 0.0, 1.0;
   Reflexividad = 0.5;
 }
 
@@ -50,17 +44,9 @@ Esfera1
  
 Esfera2
 {
-  Centro = 233.0, 140.0, 0.0;  
+  Centro = 320.0, 140.0, 0.0;  
   Tamano = 100.0;
   Material.id = 2;
-
-}
-
-Esfera3
-{
-  Centro = 407.0, 140.0, 0.0;  
-  Tamano = 100.0;
-  Material.id = 3;
 
 }
 
