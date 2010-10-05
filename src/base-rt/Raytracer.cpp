@@ -121,6 +121,7 @@ bool Raytracer::dibujar() {
 				/* Se calcula el efecto de la luz sobre un objeto y su color */
 				for (m = 0; m < escena.listaLuces.size(); m++) {
 					Luz luzActual = escena.listaLuces[m];
+
 					Vector distanciaLuz = luzActual.posicion - nInicio;
 
 					if (normal * distanciaLuz <= 0.0f)
@@ -141,6 +142,7 @@ bool Raytracer::dibujar() {
 					for (k = 0; k < escena.listaEsferas.size(); k++) {
 						if (intersecaEsfera(rayoLuz, escena.listaEsferas[k], magnitud)) {
 							enSombra = true;
+							cout << "En sombra " << i << " " << j <<  endl;
 							break;
 						}
 					}
@@ -157,7 +159,7 @@ bool Raytracer::dibujar() {
 				}
 
 				/* Se itera para cada una de las intensidades de reflexion del
-				 * material (i.e. capacidad de reflejar la luz.
+				 * material (i.e. capacidad de reflejar la luz).
 				 */
 				c *= materialActual.reflexion;
 				float reflejado = 2.0f * (rayo.direccion*normal);

@@ -38,6 +38,7 @@ public:
 	Material();
 	Material(float rf, float rj, float vd, float az);
 	~Material();
+	Material operator=(const Material &mat);
 };
 
 class Esfera {
@@ -49,6 +50,7 @@ public:
 	Esfera();
 	Esfera (Punto &p, float t, int id);
 	~Esfera();
+	Esfera operator=(const Esfera &es);
 };
 
 class Luz {
@@ -61,6 +63,7 @@ public:
 	Luz();
 	Luz(Punto &p, float rj, float vd, float az);
 	~Luz();
+	Luz operator=(const Luz &lz);
 };
 
 class Rayo {
@@ -71,6 +74,7 @@ public:
 	Rayo();
 	Rayo(Punto &i, Vector &d);
 	~Rayo();
+	Rayo operator=(const Rayo &ry);
 };
 
 class Escena {

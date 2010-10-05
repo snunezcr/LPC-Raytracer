@@ -41,6 +41,13 @@ Material::~Material() {
 
 }
 
+Material Material::operator=(const Material &mat) {
+	reflexion = mat.reflexion;
+	rojo = mat.rojo;
+	verde = mat.verde;
+	azul = mat.azul;
+}
+
 Esfera::Esfera() : posicion(0.0f, 0.0f, 0.0f) {
 	tamano = 0.0f;
 	idMaterial = 0;
@@ -54,6 +61,12 @@ Esfera::Esfera (Punto &p, float t, int id) {
 
 Esfera::~Esfera() {
 
+}
+
+Esfera Esfera::operator=(const Esfera &es) {
+	posicion = es.posicion;
+	tamano = es.tamano;
+	idMaterial = es.idMaterial;
 }
 
 Luz::Luz() : posicion(0.0f, 0.0f, 0.0f) {
@@ -73,6 +86,13 @@ Luz::~Luz() {
 
 }
 
+Luz Luz::operator=(const Luz &lz) {
+	posicion = lz.posicion;
+	rojo = lz.rojo;
+	verde = lz.verde;
+	azul = lz.azul;
+}
+
 Rayo::Rayo() : inicio(0.0f, 0.0f, 0.0f), direccion(0.0f, 0.0f, 0.0f) {
 
 }
@@ -84,6 +104,11 @@ Rayo::Rayo(Punto &i, Vector &d) {
 
 Rayo::~Rayo() {
 
+}
+
+Rayo Rayo::operator=(const Rayo &ry) {
+	inicio = ry.inicio;
+	direccion = ry.direccion;
 }
 
 Escena::Escena() {
