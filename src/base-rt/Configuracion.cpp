@@ -223,7 +223,7 @@ Vector Configuracion::obtenerPorNombreVector(const String &nombre, const Vector 
 	ConjuntoVariables::const_iterator i =
 			static_cast<ConjuntoVariables *>((ConjuntoVariables *)vars)->find(nombreVector);
 	if (i != ((ConjuntoVariables *)vars)->end()) {
-		int leidos = sscanf(i->second.cString(), "%f %f %f", &v.x, &v.y, &v.z);
+		int leidos = sscanf(i->second.cString(), "%f, %f, %f", &v.x, &v.y, &v.z);
 
 		if (leidos != 3)
 			return defval;
@@ -241,7 +241,7 @@ Punto Configuracion::obtenerPorNombrePunto(const String &nombre, const Punto &de
 	ConjuntoVariables::const_iterator i =
 			static_cast<ConjuntoVariables *>((ConjuntoVariables *)vars)->find(nombrePunto);
 	if (i != ((ConjuntoVariables *)vars)->end()) {
-		int leidos = sscanf(i->second.cString(), "%f %f %f", &p.x, &p.y, &p.z);
+		int leidos = sscanf(i->second.cString(), "%f, %f, %f", &p.x, &p.y, &p.z);
 
 		if (leidos != 3)
 			return defval;

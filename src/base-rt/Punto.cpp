@@ -24,6 +24,14 @@ Punto::Punto(float xx, float yy, float zz) {
 	z = zz;
 }
 
+Punto Punto::operator=(const Punto &p) {
+	x = p.x;
+	y = p.y;
+	z = p.z;
+
+	return *this;
+}
+
 Punto Punto::operator+(const Vector &v) const {
 	Punto p(x + v.x, y + v.y, z + v.z);
 

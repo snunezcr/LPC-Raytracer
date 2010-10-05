@@ -78,17 +78,17 @@ bool Raytracer::dibujar() {
 	for (j = 0; j < escena.tamY; j++) {
 		for (i = 0; i < escena.tamX; i++) {
 			float rojo = 0.0f;
-			float verde =0.0f;
+			float verde = 0.0f;
 			float azul = 0.0f;
 			float c = 1.0f;
-			int level = 0;
+			int nivel = 0;
 
 			/* Se coloca el rayo a una distancia promedio para evitar problemas
 			 * de redondeo. Una forma de mejorarlo es
 			 */
 			Punto origen(float(i), float(j), -1000.0f);
-			Vector normal(0.0f, 0.0f, 1.0f);
-			Rayo rayo(origen, normal);
+			Vector u(0.0f, 0.0f, 1.0f);
+			Rayo rayo(origen, u);
 
 			do {
 				unsigned int k;
@@ -105,25 +105,25 @@ bool Raytracer::dibujar() {
 				if (esferaActual == -1)
 					break;
 
-				Punto posRayoNormal = rayo.inicio - rayo.direccion * t;
-				Vector rayoNormal = posRayoNormal -
-						escena.listaEsferas[k].posicion;
-				float divisorNormal = rayoNormal * rayoNormal;
+				Punto nInicio = rayo.inicio - rayo.direccion * t;
+				Vector normal = nInicio -
+						escena.listaEsferas[esferaActual].posicion;
+				float divisorNormal = normal * normal;
 				
 				if (divisorNormal == 0.0f)
 					break;
 
 				divisorNormal = 1.0f/sqrt(divisorNormal);
-				rayoNormal = rayoNormal*divisorNormal;
+				normal = normal*divisorNormal;
 				
 				Material materialActual =
 					escena.listaMateriales[escena.listaEsferas[esferaActual].idMaterial];
 				/* Se calcula el efecto de la luz sobre un objeto y su color */
 				for (m = 0; m < escena.listaLuces.size(); m++) {
 					Luz luzActual = escena.listaLuces[m];
-					Vector distanciaLuz = luzActual.posicion - posRayoNormal;
+					Vector distanciaLuz = luzActual.posicion - nInicio;
 
-					if (rayoNormal * distanciaLuz <= 0.0f)
+					if (normal * distanciaLuz <= 0.0f)
 						continue;
 
 					float magnitud = sqrt(distanciaLuz * distanciaLuz);
@@ -132,7 +132,7 @@ bool Raytracer::dibujar() {
 						continue;
 
 					Rayo rayoLuz;
-					rayoLuz.inicio = posRayoNormal;
+					rayoLuz.inicio = nInicio;
 					rayoLuz.direccion = distanciaLuz*(1 / magnitud);
 
 					/* Se calculan las sombras para cada uno de los objetos */
@@ -149,7 +149,7 @@ bool Raytracer::dibujar() {
 					 * intensidad, direccion del rayo de Luz y material
 					 */
 					if (! enSombra) {
-						float lambert = (rayoLuz.direccion * rayoNormal) * c;
+						float lambert = (rayoLuz.direccion * normal) * c;
 						rojo += lambert * luzActual.rojo * materialActual.rojo;
 						verde += lambert * luzActual.verde * materialActual.verde;
 						azul += lambert * luzActual.azul * materialActual.azul;
@@ -160,10 +160,12 @@ bool Raytracer::dibujar() {
 				 * material (i.e. capacidad de reflejar la luz.
 				 */
 				c *= materialActual.reflexion;
-				float reflejado = 2.0f * (rayo.direccion*rayoNormal);
-				rayo.inicio = posRayoNormal;
-				rayo.direccion = rayo.direccion - rayoNormal*reflejado;
-			} while (c > 0.0f && level < 10);
+				float reflejado = 2.0f * (rayo.direccion*normal);
+				rayo.inicio = nInicio;
+				rayo.direccion = rayo.direccion - normal*reflejado;
+				
+				nivel++;
+			} while (c > 0.0f && nivel < 10);
 			
 			archivoTGA.put((unsigned char) min(azul*255.0f, 255.0f));
 			archivoTGA.put((unsigned char) min(verde*255.0f, 255.0f));
