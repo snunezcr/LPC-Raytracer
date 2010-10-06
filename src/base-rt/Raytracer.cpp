@@ -102,7 +102,14 @@ bool Raytracer::dibujar() {
 				Vector u(0.0f, 0.0f, 1.0f);
 				Rayo rayo(origen, u);
 
-				/* Algoritmo para auto-exposicion (fotografia) */
+				/* Algoritmo para auto-exposicion (fotografia). Una de las 
+				 * posibles extensiones para incrementar el realismo es
+				 * parametrizar la exposicion con el fin de simular las
+				 * direfentes opciones de apertura de camara que los artistas
+				 * tienen a su disposicion. Otra opcion es determinar a partir
+				 * de la escena cual es el mejor valor para exposicion de manera
+				 * automatica.
+				 */
 				for (float partI = float(i); partI < i + 1.0f; partI += 0.5f) {
 					for (float partJ = float(j); partJ < j + 1.0; partJ +=0.5f) {
 						float tasaMuestreo = 0.25f;
