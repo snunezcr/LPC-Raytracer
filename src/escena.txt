@@ -11,18 +11,24 @@ Material0
 {
   Difusividad = 1.0, 0.0, 0.0;
   Reflexividad = 0.5;
+  Especularidad = 1.0, 1.0, 1.0;
+  Potencia = 60;
 }
 
 Material1
 {
   Difusividad = 0.0, 1.0, 0.0;
   Reflexividad = 0.5;
+  Especularidad = 1.0, 1.0, 1.0;
+  Potencia = 60;
 }
 
 Material2
 {
   Difusividad = 0.0, 0.0, 1.0;
   Reflexividad = 0.5;
+  Especularidad = 1.0, 1.0, 1.0;
+  Potencia = 60;
 }
 
 Esfera0

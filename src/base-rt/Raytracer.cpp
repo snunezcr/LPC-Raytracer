@@ -19,6 +19,7 @@
 #include <limits>
 #include <algorithm>
 #include <Raytracer.h>
+#include <Util.h>
 
 Raytracer::Raytracer(const char *ain, const char *aout) {
 	archivoIn = ain;
@@ -77,19 +78,55 @@ bool Raytracer::dibujar() {
 	/* Para cada pixel en la escena */
 	for (j = 0; j < escena.tamY; j++) {
 		for (i = 0; i < escena.tamX; i++) {
-			/* Se coloca el rayo a una distancia promedio para evitar problemas
-			 * de redondeo. Una forma de mejorarlo es incrementar la cantidad de
-			 * iteraciones.
-			 */
-			Punto origen(float(i), float(j), -1000.0f);
-			Vector u(0.0f, 0.0f, 1.0f);
-			Rayo rayo(origen, u);
-			Color pixel = agregarRayo(rayo); 
-			
-			
-			archivoTGA.put((unsigned char) min(pixel.azul*255.0f, 255.0f));
-			archivoTGA.put((unsigned char) min(pixel.verde*255.0f, 255.0f));
-			archivoTGA.put((unsigned char) min(pixel.rojo*255.0f, 255.0f));
+			if (j < 10) {
+				if ((i / 10) & 1) {
+					archivoTGA.put((unsigned char)186);
+					archivoTGA.put((unsigned char)186);
+					archivoTGA.put((unsigned char)186);
+				} else if (j & 1) {
+					archivoTGA.put((unsigned char)255);
+					archivoTGA.put((unsigned char)255);
+					archivoTGA.put((unsigned char)255);
+				} else {
+					archivoTGA.put((unsigned char)0);
+					archivoTGA.put((unsigned char)0);
+					archivoTGA.put((unsigned char)0);
+				}
+			} else {
+				Color pixel(0.0f, 0.0f, 0.0f);
+				/* Se coloca el rayo a una distancia promedio para evitar problemas
+				 * de redondeo. Una forma de mejorarlo es incrementar la cantidad de
+				 * iteraciones.
+				 */
+				Punto origen(float(i), float(j), -1000.0f);
+				Vector u(0.0f, 0.0f, 1.0f);
+				Rayo rayo(origen, u);
+
+				/* Algoritmo para auto-exposicion (fotografia) */
+				for (float partI = float(i); partI < i + 1.0f; partI += 0.5f) {
+					for (float partJ = float(j); partJ < j + 1.0; partJ +=0.5f) {
+						float tasaMuestreo = 0.25f;
+						float exposicion = -1;
+						Punto origen(partI, partJ, -1000.0f);
+                                		Vector u(0.0f, 0.0f, 1.0f);
+                                		Rayo rayo(origen, u);
+						Color temp = agregarRayo(rayo);
+						temp.azul = (1.0f - expf(temp.azul * exposicion));
+						temp.verde = (1.0f - expf(temp.verde * exposicion));
+						temp.rojo = (1.0f - expf(temp.rojo * exposicion));
+						pixel = pixel + (temp * tasaMuestreo);
+					}
+				}				
+
+				/* La correccion gamma permite ajustar el color final */
+				pixel.azul = codificarSRGB(pixel.azul);
+				pixel.verde = codificarSRGB(pixel.verde);
+				pixel.rojo = codificarSRGB(pixel.rojo);
+
+				archivoTGA.put((unsigned char) min(pixel.azul*255.0f, 255.0f));
+				archivoTGA.put((unsigned char) min(pixel.verde*255.0f, 255.0f));
+				archivoTGA.put((unsigned char) min(pixel.rojo*255.0f, 255.0f));
+			}
 		}
 	}
 	return true;
@@ -157,6 +194,7 @@ Color Raytracer::agregarRayo(Rayo &rayo) {
 
 		Material materialActual =
 			escena.listaMateriales[escena.listaEsferas[esferaActual].idMaterial];
+
 		/* Se calcula el efecto de la luz sobre un objeto y su color */
 		for (m = 0; m < escena.listaLuces.size(); m++) {
 			Luz luzActual = escena.listaLuces[m];
@@ -165,14 +203,24 @@ Color Raytracer::agregarRayo(Rayo &rayo) {
 			if (normal * distanciaLuz <= 0.0f)
 				continue;
 
-			float magnitud = sqrt(distanciaLuz * distanciaLuz);
-
-			if (magnitud <= 0.0f)
-				continue;
-
 			Rayo rayoLuz;
 			rayoLuz.inicio = nInicio;
-			rayoLuz.direccion = distanciaLuz*(1 / magnitud);
+			rayoLuz.direccion = distanciaLuz;
+			float proyeccionLuz = rayoLuz.direccion * normal;
+
+			if (proyeccionLuz <= 0.0f)
+				continue;
+
+			float luzMag = rayoLuz.direccion * rayoLuz.direccion;
+			float magnitud = luzMag;
+
+			if (luzMag <= 0.0f)
+				continue;
+
+			
+			luzMag = inversoSqrt(luzMag);
+			rayoLuz.direccion = rayoLuz.direccion * luzMag;
+			proyeccionLuz *= luzMag;
 
 			/* Se calculan las sombras para cada uno de los objetos */
 			bool enSombra = false;
@@ -195,6 +243,25 @@ Color Raytracer::agregarRayo(Rayo &rayo) {
 						materialActual.difusividad.verde;
 				resultado.azul += lambert * luzActual.intensidad.azul *
 						materialActual.difusividad.azul;
+
+				/* Junto a Lambert, se calcula Blinn-Phong que permite
+				 * simular materiales con diferente brillo.
+				 */
+				float proyeccionNormal = rayo.direccion * normal;
+				float proyeccionLuz = rayoLuz.direccion * normal;
+
+				if (proyeccionLuz <= 0.0f)
+					continue;
+
+				Vector direccionBlinn = rayoLuz.direccion - rayo.direccion;
+				float magBlinn = direccionBlinn * direccionBlinn;
+				
+				if (magBlinn != 0.0f) {
+					float blinn = inversoSqrt(magBlinn) *
+						max(proyeccionLuz - proyeccionNormal, 0.0f);
+					blinn = c * powf(blinn, materialActual.potencia);
+					resultado = resultado + luzActual.intensidad * blinn * materialActual.especularidad;
+				}
 			}
 		}
 
